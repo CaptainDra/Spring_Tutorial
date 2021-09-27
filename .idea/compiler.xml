@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ListenerStream" />
+        <module name="Producer" />
         <module name="Spring_Tutorial" />
       </profile>
     </annotationProcessing>
@@ -14,6 +15,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ListenerStream" options="-parameters" />
+      <module name="Producer" options="-parameters" />
     </option>
   </component>
 </project>
