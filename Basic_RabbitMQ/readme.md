@@ -3,4 +3,4 @@
 
 ## 配置RabbitMQ地址以及服务地址
 ![配置文件](screenshot/applicationPropertiesConfig.png)
-<center><a href="src/main/resources/application.properties" target="_blank">配置文件</a></center>
+<p align="center"><a href="src/main/resources/application.properties" target="_blank">配置文件</a></p>
