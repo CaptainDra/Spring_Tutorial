@@ -7,6 +7,7 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/ListenerStream/pom.xml" />
         <option value="$PROJECT_DIR$/Producer/pom.xml" />
+        <option value="$PROJECT_DIR$/Basic_RabbitMQ/pom.xml" />
       </list>
     </option>
   </component>
