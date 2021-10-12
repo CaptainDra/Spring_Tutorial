@@ -60,7 +60,7 @@
 
 #### containerType ####
 默认值: simple    
-选择要使用的侦听器容器的类型,详见:https://docs.spring.io/spring-amqp/reference/html/_reference.html#choose-container(这个网页是假的)    
+选择要使用的侦听器容器的类型,详见:https://docs.spring.io/spring-amqp/reference/html/_reference.html#choose-container   (这个网页是假的)    
 
 #### deadLetterQueueName ####
 默认值: prefix+destination.dlq    
@@ -68,4 +68,223 @@
 
 #### deadLetterExchange ####
 默认值: 'prefix+DLX'     
-分配给queue的DLX。仅当[autoBindDlq]为[true]时才相关。
+分配给queue的DLX。仅当[autoBindDlq]为[true]时才用    
+
+#### deadLetterExchangeType ####
+默认值: 'direct'    
+要分配给queue的DLX的类型。仅当[autoBindDlq]为[true]时才用    
+
+#### deadLetterRoutingKey ####
+默认值: destination     
+给死信队列的路由键，仅当[autoBindDlq]为[true]时采用
+
+#### declareDlx ####
+默认值: true     
+是否为目标声明死信交换，仅当[autoBindDlq]为[true]时才相关     
+如果有预配置的 DLX，请设置为 false
+
+#### declareExchange ####
+默认值: true     
+是否为目标声明exchange     
+
+#### delayedExchange ####
+默认值: false
+是否将交换声明为[Delay Message Exchange]，需要代理上的延迟消息交换插件    
+x-delayed-type 参数设置为 exchangeType     
+
+#### dlqBindingArguments ####
+默认值: empty    
+将dlq绑定到死信交换时应用的参数；与header deadLetterExchangeType 一起使用以指定要匹配的header     
+例如… dlqBindingArguments.x-match=any, … dlqBindingArguments.someHeader=someValue    
+
+#### dlqDeadLetterExchange ####
+默认值: none    
+如果死信队列声明了，将一个DLX分配到那个queue    
+
+#### dlqDeadLetterRoutingKey ####
+默认值: none
+如果死信队列声明了，将一个死信路由键分配到那个queue     
+
+#### dlqExpires ####
+默认值: no expiration     
+死信队列里没用的多久删除(单位为ms)    
+
+#### dlpLazy ####
+默认值: false    
+使用 x-queue-mode=lazy 参数声明死信队列。请参阅“https://www.rabbitmq.com/lazy-queues.html”     
+建议考虑使用策略而不是此设置，因为使用策略即可允许在不删除队列的情况下更改设置
+
+#### dlqMaxLength ####
+默认值: no limit    
+死信队列容量（消息数）     
+
+#### dlqMaxLengthBytes ####
+默认值: no limit    
+死信队列容量(总字节数)    
+
+#### dlqMaxPriority ####
+默认值: none    
+死信队列中信息最大优先值(0~255)    
+
+#### dlqOverflowBehavior ####
+默认值: none    
+当上两个容量超过了后采取什么策略，当前可以采用[drop-head]或[reject-publish]，但是可能之后会变，请参考RabbitMQ文档   
+
+#### dlqQuorum.deliveryLimit ####
+默认值: none -代理器默认
+当 [quorum.enabled=true] 时，设置传递限制，在此之后信息将被丢弃或死信。
+
+#### dlqQuorum.enabled ####
+默认值: false     
+是否创建Quorum死信队列     
+
+#### dlqQuorum.initialQuorumSize ####
+默认值: none -代理器默认     
+上一个设为true后，设置初始容量     
+
+#### dlqSingleActiveConsumer ####
+默认值: false     
+设为true来设置[x-single-active-consumer]队列优先为true
+
+#### dlqTtl ####
+默认值: no limit    
+应用与死信队列的默认生存时间(ms)
+
+#### durableSubscription ####
+默认值: true    
+订阅是是持久的，仅当设置了group时才有效
+
+#### exchangeAutoDelete ####
+默认值: true     
+如果 [declareExchange] 为 [true]，则exchange是否应自动删除（当exchange中最后一个队列删除后删除）
+
+#### exchangeDurable ####
+默认值: true    
+如果 [declareExchange] 为 [true]，则exchange是否应该是持久的（exchange在代理重启后是否仍然存在）
+
+#### exchangeType ####
+默认值: topic    
+exchange类型: [direct], [fanout], [headers] or [topic] for non-partitioned destinations and [direct], [headers] or [topic] for partitioned destinations.
+
+
+#### exclusive ####
+默认值: false     
+是否创建独占消费者
+
+#### expires ####
+默认值: no expiration
+未使用队列多久删(ms)
+
+
+#### failedDeclarationRetryInterval ####
+默认值: 5000    
+如果队列丢失，尝试从队列中消费之间的间隔（ms）(怎么翻译都不是人话)
+
+
+#### frameMaxHeadroom ####
+默认值: 20000    
+将堆栈跟踪添加到 DLQ 消息头时为其他头保留的字节数
+
+#### headerPatterns ####
+默认值: ['*'] (全部header)    
+入站消息映射的标头模式
+
+
+#### lazy ####
+默认值: false       
+使用 [x-queue-mode=lazy] 参数声明队列     
+参考:https://www.rabbitmq.com/lazy-queues.html    
+
+#### maxConcurrency ####
+默认值: 1    
+最多消费者数.当[containerType]为[direct]不支持
+
+
+#### maxLength ####
+默认值: no limit     
+队列中最多有多少消息
+
+#### maxLengthBytes ####
+默认值: no limit    
+队列中最多有多少字节(总)
+
+#### maxPriority ####
+默认值: none    
+队列中信息最大优先值(0~255)
+
+#### missingQueuesFatal ####
+默认值: false
+当找不到队列时，是否将条件视为错误并停止监听容器    
+默认为 false 以便容器不断尝试从队列中消费     
+
+#### overflowBehavior ####
+默认值: none    
+超过 maxLength 或 maxLengthBytes 时采取的行动；[drop-head]或[reject-publish]
+
+#### prefetch ####
+Default: 1    
+Prefetch的数目    
+
+#### prefix ####
+默认值: ""    
+要添加到destination和queue名称的前缀
+
+#### queueBindingArguments ####
+默认值: empty    
+将队列绑定到交换时应用的参数；与 [headers],[exchangeType] 一起使用以指定要匹配的header
+
+#### queueDeclarationRetries ####
+默认值: 3    
+如果队列丢失，重试消费的次数。仅当 [missingQueuesFatal]为[true]时才相关   
+否则，容器会无限期地重试     
+当[containerType]为[direct]时不支持
+
+#### queueNameGroupOnly ####
+默认值: false     
+当为[true]时，从名称等于group的队列中消费,否则队列名称是[destination.group]
+
+#### quorum.deliveryLimit ####
+默认值: none - 代理默认     
+当quorum.enabled=true时，设置传递限制，在此之后邮件将被丢弃或死信    
+
+#### quorum.enabled ####
+默认值: false     
+为 true 时，创建仲裁队列而不是经典队列     
+
+#### quorum.initialQuorumSize ####
+默认值: none - 代理默认
+当 quorum.enabled=true 时，设置初始大小     
+
+#### recoveryInterval ####
+默认值: 5000    
+恢复连接尝试间隔(ms)
+
+#### requeueRejected ####
+默认值: false    
+当禁用重试或 [republishToDlq] 为 [false] 时，传输失败时是否应重新排队。
+
+#### republishDeliveryMode ####
+默认值: DeliveryMode.PERSISTENT      
+当 [republishToDlq] 为 [true] 时，指定重新发布消息的传递方式
+
+#### republishToDlq ####
+默认值: false    
+默认情况下，重试用完后失败的消息将被拒绝。如果配置了死信队列（DLQ），RabbitMQ 会将失败的消息（未更改）路由到 DLQ     
+如果设置为 true，则绑定器将带有附加标头的失败消息重新发布到 DLQ，包括来自最终失败原因的异常消息和堆栈跟踪    
+
+
+#### singleActiveConsumer ####
+默认值: false    
+设置为 true 以将 x-single-active-consumer 队列属性设置为 true
+
+
+#### transacted ####
+默认值: false.    
+是否使用transacted channel
+
+#### ttl ####
+默认值: no limit    
+声明时应用于队列的默认生存时间(ms)    
+#### txSize ####
+默认值: 1.    
+ack 之间的交付次数。当 containerType 为[direct]时不支持
