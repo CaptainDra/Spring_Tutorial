@@ -12,7 +12,7 @@
 
 同时让[生产者](src/main/java/com/example/producer/Producer.java)对于同一消息一次发送两个flag分别为1和2的的消息,    
 <p align="center"><img src="pic/postman_send.png"  alt="发送" /></p>
-<p align="center"><a href="src/main/resources/application.properties" target="_blank">发送消息</a></p>
+<p align="center">发送消息</p>
 得到的结果为能接到flag为1的但是无法接收到flag为2的消息
 <p align="center"><img src="pic/log.png"  alt="接收" /></p>
-<p align="center"><a href="src/main/resources/application.properties" target="_blank">消息接收</a></p>
+<p align="center">消息接收</p>
