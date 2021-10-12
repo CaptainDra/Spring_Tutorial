@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ListenerStream" />
         <module name="Producer" />
+        <module name="Message_Partition" />
         <module name="Spring_Tutorial" />
       </profile>
     </annotationProcessing>
@@ -20,6 +21,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Basic_RabbitMQ" options="-parameters" />
       <module name="ListenerStream" options="-parameters" />
+      <module name="Message_Partition" options="-parameters" />
       <module name="Producer" options="-parameters" />
     </option>
   </component>
