@@ -25,7 +25,8 @@
 
 ### RabbitMQ Consumer Properties
 配置消费者的时候可以用到，配置的时候前缀均为[spring.cloud.stream.rabbit.bindings.<channelName>.consumer.]格式    
-当想把多个值绑定到全部channel的时候，为了避免重复，可以使用[spring.cloud.stream.rabbit.bindings.<channelName>.consumer.]来设置
+当想把多个值绑定到全部channel的时候，为了避免重复，可以使用[spring.cloud.stream.rabbit.default.<property>=<value>]来设置     
+然后具体的设置会覆盖这个
 
 #### acknowledgeMode ####
 默认值: AUTO     
@@ -44,7 +45,7 @@
 默认值: #    
 用于将queue绑定到exchange的routing key(路由密钥)（如果 bindQueue 为 true）    
 可以是多个key,详见[bindingRoutingKeyDelimiter]。    
-对于分区目标，[-<instanceIndex>] 附加到每个键。    
+对于分区目标，-<instanceIndex> 附加到每个键。    
 
 #### bindingRoutingKeyDelimiter ####
 默认值: null    
@@ -222,7 +223,7 @@ exchange类型: [direct], [fanout], [headers] or [topic] for non-partitioned des
 超过 maxLength 或 maxLengthBytes 时采取的行动；[drop-head]或[reject-publish]
 
 #### prefetch ####
-Default: 1    
+默认值: 1    
 Prefetch的数目    
 
 #### prefix ####
@@ -252,7 +253,7 @@ Prefetch的数目
 为 true 时，创建仲裁队列而不是经典队列     
 
 #### quorum.initialQuorumSize ####
-默认值: none - 代理默认
+默认值: none - 代理默认     
 当 quorum.enabled=true 时，设置初始大小     
 
 #### recoveryInterval ####
@@ -288,3 +289,256 @@ Prefetch的数目
 #### txSize ####
 默认值: 1.    
 ack 之间的交付次数。当 containerType 为[direct]时不支持
+
+### Rabbit Producer Properties ###
+配置生产者的时候可以用到，配置的时候前缀均为[spring.cloud.stream.rabbit.bindings.<channelName>.producer.]格式    
+当想把多个值绑定到全部channel的时候，为了避免重复，可以使用[spring.cloud.stream.rabbit.default.<property>=<value>]来设置    
+具体的设置会覆盖这个默认设置
+
+#### autoBindDlq ####
+默认值: false    
+是否自动声明死信队列    
+
+#### batchingEnabled ####
+默认值: false    
+是否启用生产者消息批处理，设为[true]后需要调整这三个参数:[batchSize], [batchBufferLimit], [batchTimeout]
+
+#### batchSize ####
+默认值: 100    
+当允许批处理时，送到buffer的消息数量    
+
+#### batchBufferLimit
+默认值: 10000    
+当允许批处理时，最大buffer容量
+
+#### batchTimeout ####
+默认值: 5000    
+当允许批处理时，批处理超时时间
+
+#### bindingRoutingKey ####
+默认值: #    
+用于将queue绑定到exchange的routing key(路由密钥)（如果 bindQueue 为 true）
+可以是多个key,详见[bindingRoutingKeyDelimiter]    
+对于分区目标，[-n] 附加到每个键后边    
+仅在提供 requiredGroups 时才适用，然后仅适用于这些group
+
+#### bindingRoutingKeyDelimiter ####
+默认值: null    
+当不为空，bindingRoutingKey为一个被该值分隔的list，这个值通常为逗号    
+仅在提供 requiredGroups 时才适用，然后仅适用于这些group    
+
+#### bindQueue ####
+默认值: true.
+是否声明queue并将其绑定到目标exchange。如果已经设置了自己的基础设施并且之前已经创建并绑定了queue，则将其设置为 false    
+仅在提供 requiredGroups 时才适用，然后仅适用于这些group
+
+#### compress ####
+默认值: false    
+数据发送时是否需要压缩
+
+#### confirmAckChannel ####
+默认值: nullChannel (acks are discarded)        
+当 [errorChannelEnabled] 为 [true] 时，向其发送交付确认（发布者确认）的通道    
+如果channel不存在，则使用此名称注册 DirectChannel    
+必须配置connection factory以启用publisher confirms
+
+#### deadLetterQueueName ####
+默认值: prefix+destination.dlq    
+死信队列的名称仅在提供 requiredGroups 时才适用，然后仅适用于这些组。
+
+#### deadLetterExchange ####
+默认值: 'prefix+DLX'    
+分配给队列的 DLX。仅当 autoBindDlq 为真时相关     
+仅在提供 requiredGroups 时适用，然后仅适用于这些组
+
+#### deadLetterExchangeType ####
+默认值: 'direct'    
+要分配给队列的 DLX 的类型    
+仅当 [autoBindDlq] 为 [true] 时才相关    
+仅在提供 requiredGroups 时适用，然后仅适用于这些组。
+
+#### deadLetterRoutingKey ####
+默认值: destination    
+分配给死信队列的路由键。仅当 [autoBindDlq] 为 [true]时相关。    
+仅在提供 requiredGroups 时适用，然后仅适用于这些组。    
+
+#### declareDlx ####
+默认值: true  
+Whether to declare the dead letter exchange for the destination. Relevant only if autoBindDlq is true. Set to false if you have a pre-configured DLX. Applies only when requiredGroups are provided and then only to those groups.
+
+#### declareExchange ####
+默认值: true     
+Whether to declare the exchange for the destination.
+
+#### delayExpression ####
+A SpEL expression to evaluate the delay to apply to the message (x-delay header). It has no effect if the exchange is not a delayed message exchange.
+
+默认值: No x-delay header is set.
+
+#### delayedExchange ####
+Whether to declare the exchange as a Delayed Message Exchange. Requires the delayed message exchange plugin on the broker. The x-delayed-type argument is set to the exchangeType.
+
+默认值: false.
+
+#### deliveryMode ####
+The delivery mode.
+
+默认值: PERSISTENT.
+
+#### dlqBindingArguments ####
+Arguments applied when binding the dlq to the dead letter exchange; used with headers deadLetterExchangeType to specify headers to match on. For example …​dlqBindingArguments.x-match=any, …​dlqBindingArguments.someHeader=someValue. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: empty
+
+#### dlqDeadLetterExchange ####
+When a DLQ is declared, a DLX to assign to that queue. Applies only if requiredGroups are provided and then only to those groups.
+
+默认值: none
+
+#### dlqDeadLetterRoutingKey ####
+When a DLQ is declared, a dead letter routing key to assign to that queue. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: none
+
+#### dlqExpires ####
+How long (in milliseconds) before an unused dead letter queue is deleted. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: no expiration
+
+#### dlqLazy ####
+Declare the dead letter queue with the x-queue-mode=lazy argument. See “Lazy Queues”. Consider using a policy instead of this setting, because using a policy allows changing the setting without deleting the queue. Applies only when requiredGroups are provided and then only to those groups.
+
+#### dlqMaxLength ####
+Maximum number of messages in the dead letter queue. Applies only if requiredGroups are provided and then only to those groups.
+
+默认值: no limit
+
+#### dlqMaxLengthBytes ####
+Maximum number of total bytes in the dead letter queue from all messages. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: no limit
+
+#### dlqMaxPriority ####
+Maximum priority of messages in the dead letter queue (0-255) Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: none
+
+#### dlqQuorum.deliveryLimit ####
+When quorum.enabled=true, set a delivery limit after which the message is dropped or dead-lettered. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: none - broker default will apply.
+
+#### dlqQuorum.enabled ####
+When true, create a quorum dead letter queue instead of a classic queue. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: false
+
+#### dlqQuorum.initialQuorumSize ####
+When quorum.enabled=true, set the initial quorum size. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: none - broker default will apply.
+
+#### dlqSingleActiveConsumer ####
+Set to true to set the x-single-active-consumer queue property to true. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: false
+
+#### dlqTtl ####
+Default time (in milliseconds) to live to apply to the dead letter queue when declared. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: no limit
+
+#### exchangeAutoDelete ####
+If declareExchange is true, whether the exchange should be auto-delete (it is removed after the last queue is removed).
+
+默认值: true.
+
+#### exchangeDurable ####
+If declareExchange is true, whether the exchange should be durable (survives broker restart).
+
+默认值: true.
+
+#### exchangeType ####
+The exchange type: direct, fanout, headers or topic for non-partitioned destinations and direct, headers or topic for partitioned destinations.
+
+默认值: topic.
+
+#### expires ####
+How long (in milliseconds) before an unused queue is deleted. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: no expiration
+
+#### headerPatterns ####
+Patterns for headers to be mapped to outbound messages.
+
+默认值: ['*'] (all headers).
+
+#### lazy ####
+Declare the queue with the x-queue-mode=lazy argument. See “Lazy Queues”. Consider using a policy instead of this setting, because using a policy allows changing the setting without deleting the queue. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: false.
+
+#### maxLength ####
+Maximum number of messages in the queue. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: no limit
+
+#### maxLengthBytes ####
+Maximum number of total bytes in the queue from all messages. Only applies if requiredGroups are provided and then only to those groups.
+
+默认值: no limit
+
+#### maxPriority ####
+Maximum priority of messages in the queue (0-255). Only applies if requiredGroups are provided and then only to those groups.
+
+默认值: none
+
+#### prefix ####
+A prefix to be added to the name of the destination exchange.
+
+默认值: "".
+
+#### queueBindingArguments ####
+Arguments applied when binding the queue to the exchange; used with headers exchangeType to specify headers to match on. For example …​queueBindingArguments.x-match=any, …​queueBindingArguments.someHeader=someValue. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: empty
+
+#### queueNameGroupOnly ####
+When true, consume from a queue with a name equal to the group. Otherwise the queue name is destination.group. This is useful, for example, when using Spring Cloud Stream to consume from an existing RabbitMQ queue. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: false.
+
+#### quorum.deliveryLimit ####
+When quorum.enabled=true, set a delivery limit after which the message is dropped or dead-lettered. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: none - broker default will apply.
+
+#### quorum.enabled ####
+When true, create a quorum queue instead of a classic queue. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: false
+
+#### quorum.initialQuorumSize ####
+When quorum.enabled=true, set the initial quorum size. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: none - broker default will apply.
+
+#### routingKeyExpression ####
+A SpEL expression to determine the routing key to use when publishing messages. For a fixed routing key, use a literal expression, such as routingKeyExpression='my.routingKey' in a properties file or routingKeyExpression: '''my.routingKey''' in a YAML file.
+
+默认值: destination or destination-<partition> for partitioned destinations.
+
+#### singleActiveConsumer ####
+Set to true to set the x-single-active-consumer queue property to true. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: false
+
+#### transacted ####
+Whether to use transacted channels.
+
+默认值: false.
+
+#### ttl ####
+Default time (in milliseconds) to live to apply to the queue when declared. Applies only when requiredGroups are provided and then only to those groups.
+
+默认值: no limit
